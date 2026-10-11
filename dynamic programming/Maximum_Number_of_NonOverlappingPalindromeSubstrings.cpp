@@ -256,3 +256,6 @@ public:
 };
 
 
+//greedy 
+if k is not valid substring check for k+1
+
