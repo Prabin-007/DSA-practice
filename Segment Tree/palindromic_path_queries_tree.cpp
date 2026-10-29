@@ -1,3 +1,95 @@
+class Solution {
+public:
+    string str;
+    int n;
+    //always there will be 1 path as its a tree
+    bool isPow2(long long x){
+        return x > 0 && (x & (x - 1)) == 0;
+    }
+    bool dfs(vector<vector<int>>& adj, vector<int>& vis, string& t, int u, int v) {
+        if(vis[u])
+            return false;
+
+        vis[u] = 1;
+        t += str[u];
+
+        if(u == v)
+            return true;
+
+        for(int i : adj[u]) {
+            if(dfs(adj, vis, t, i, v))
+                return true;
+        }
+
+        t.pop_back();
+        return false;
+    }
+
+    bool query(vector<vector<int>>& adj,int u,int v){
+        long long bitset=0;
+        vector<int>vis(n,0);
+
+        string t;
+        dfs(adj,vis,t,u,v);
+        for(char c:t){
+            int i=c-'a';
+            bitset^=1<<i;
+        }
+        if(bitset == 0 || isPow2(bitset))
+            return true;
+
+        return false;
+
+    }
+    vector<bool> palindromePath(int n, vector<vector<int>>& edges, string s, vector<string>& queries) {
+
+        str=s;
+        this->n=s.length();
+        
+        vector<vector<int>>adj(n);
+        for(auto& e:edges){
+            int u=e[0];
+            int v=e[1];
+
+            adj[u].push_back(v);
+            adj[v].push_back(u);
+        }      
+        vector<bool>result;
+        for(auto& q:queries){
+            stringstream ss(q);
+            string qi,ui,vi;
+            ss>>qi>>ui>>vi;
+            
+            if(qi=="update"){
+                int u=stoi(ui);
+                str[u]=vi[0];
+            }
+            else{
+                int u=stoi(ui);
+                int v=stoi(vi);
+                result.push_back(query(adj,u,v));
+            }
+        }
+        return result;
+    }
+};
+        // rearrange to palindrome?
+        // check freq of each letter (we only need odd or even)
+        // only a letter once and rest even times
+
+        //we need nlog(n) solution
+        //maybe segment tree
+
+        //we can store in bitset the freq of each letter 0 to 25  (1<25) at each node 
+        //but which to make the root? and this is not a binary tree as well
+
+        //we can use xor
+        //odd(1) ^ even(0) only gives odd(1)
+
+
+
+        
+
 //Approach (Segment Tree + Binary Lifting for LCA + Euler Tour)
 //T.C : O((n + q) log n)
 //      Preprocessing: DFS O(n), Binary Lifting table O(n log n), Segment Tree build O(n)
