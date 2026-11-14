@@ -1,6 +1,6 @@
 // LC-3505
 // first my code , it uses simple quick select and calulate cost of each subarray and then use dp to find the answer
-//TLE -O(n*n)
+//TLE -O(n*n*k) SC: O(n*k)
 class Solution
 {
 
@@ -107,6 +107,11 @@ public:
         return solve(nums, 0, k);
     }
 };
+
+
+
+// second code uses multiset to find median in log(n) time and then use dp to find the answer
+// TC: O(nlogn + n*k) SC: O(n+k)
 #define ll long long
 class Solution
 {
